@@ -5,8 +5,12 @@ export default function MenuItemCard({ item }) {
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition">
-      {item.imageUrl && (
+      {item.imageUrl ? (
         <img src={item.imageUrl} alt={item.name} className="w-full h-40 object-cover" />
+      ) : (
+        <div className="w-full h-40 bg-gray-100 flex items-center justify-center text-4xl">
+          🍽️
+        </div>
       )}
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">

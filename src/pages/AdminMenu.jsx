@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getAllMenuItems, createMenuItem, updateMenuItem, deleteMenuItem, toggleAvailability } from '../api/menuApi'
+import ImageUpload from '../components/ImageUpload'
 
 export default function AdminMenu() {
   const [items, setItems] = useState([])
@@ -74,6 +75,7 @@ export default function AdminMenu() {
                 <input type="text" placeholder="Category" value={form.category} onChange={(e) => setForm({...form, category: e.target.value})} className="flex-1 border rounded-lg px-3 py-2 text-sm" required />
               </div>
               <input type="text" placeholder="Image URL (optional)" value={form.imageUrl} onChange={(e) => setForm({...form, imageUrl: e.target.value})} className="w-full border rounded-lg px-3 py-2 text-sm" />
+              <ImageUpload currentUrl={form.imageUrl} onUploaded={(url) => setForm({...form, imageUrl: url})} />
               <div className="flex gap-3">
                 <button type="submit" className="flex-1 bg-primary text-white py-2 rounded-lg text-sm hover:bg-red-700">Save</button>
                 <button type="button" onClick={resetForm} className="flex-1 bg-gray-200 py-2 rounded-lg text-sm hover:bg-gray-300">Cancel</button>
