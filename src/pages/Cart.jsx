@@ -71,7 +71,7 @@ export default function Cart() {
           <div key={item.menuItem.id} className="bg-white rounded-lg p-4 shadow-sm border flex items-center justify-between">
             <div className="flex-1">
               <h3 className="font-medium text-gray-900">{item.menuItem.name}</h3>
-              <p className="text-sm text-gray-500">${item.menuItem.price.toFixed(2)} each</p>
+              <p className="text-sm text-gray-500">RM{item.menuItem.price.toFixed(2)} each</p>
             </div>
             <div className="flex items-center gap-3">
               <button
@@ -88,7 +88,7 @@ export default function Cart() {
                 +
               </button>
               <span className="font-bold text-secondary w-16 text-right">
-                ${(item.menuItem.price * item.quantity).toFixed(2)}
+                RM{(item.menuItem.price * item.quantity).toFixed(2)}
               </span>
               <button
                 onClick={() => removeFromCart(item.menuItem.id)}
@@ -114,7 +114,7 @@ export default function Cart() {
       <div className="bg-white rounded-lg p-4 shadow-sm border">
         <div className="flex justify-between items-center mb-4">
           <span className="text-lg font-bold">Total</span>
-          <span className="text-2xl font-bold text-primary">${totalPrice.toFixed(2)}</span>
+          <span className="text-2xl font-bold text-primary">RM{totalPrice.toFixed(2)}</span>
         </div>
         <button
           onClick={handlePlaceOrder}

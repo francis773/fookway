@@ -35,7 +35,7 @@ export default function AdminDashboard() {
         <StatCard label="Orders Today" value={stats.totalOrdersToday} color="bg-blue-500" />
         <StatCard label="Pending" value={stats.pendingOrders} color="bg-yellow-500" />
         <StatCard label="Preparing" value={stats.preparingOrders} color="bg-indigo-500" />
-        <StatCard label="Revenue" value={`$${stats.revenueToday?.toFixed(2) || '0.00'}`} color="bg-green-500" />
+        <StatCard label="Revenue" value={`RM${stats.revenueToday?.toFixed(2) || '0.00'}`} color="bg-green-500" />
       </div>
 
       {/* Popular items */}

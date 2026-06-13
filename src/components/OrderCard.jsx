@@ -23,7 +23,7 @@ export default function OrderCard({ order, actions }) {
         {order.items?.map((item, idx) => (
           <div key={idx} className="flex justify-between text-sm">
             <span className="text-gray-700">{item.quantity}x {item.itemName}</span>
-            <span className="text-gray-500">${item.subtotal?.toFixed(2)}</span>
+            <span className="text-gray-500">RM{item.subtotal?.toFixed(2)}</span>
           </div>
         ))}
       </div>
@@ -36,7 +36,7 @@ export default function OrderCard({ order, actions }) {
 
       <div className="flex justify-between items-center border-t pt-3">
         <span className="text-xs text-gray-400">{timeAgo(order.createdAt)}</span>
-        <span className="font-bold text-secondary">${order.totalAmount?.toFixed(2)}</span>
+        <span className="font-bold text-secondary">RM{order.totalAmount?.toFixed(2)}</span>
       </div>
 
       {actions && <div className="mt-3 flex gap-2">{actions}</div>}

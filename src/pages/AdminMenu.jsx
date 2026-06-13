@@ -102,7 +102,7 @@ export default function AdminMenu() {
               <tr key={item.id} className="border-t hover:bg-gray-50">
                 <td className="p-3 font-medium">{item.name}</td>
                 <td className="p-3 text-gray-500">{item.category}</td>
-                <td className="p-3 text-right">${item.price?.toFixed(2)}</td>
+                <td className="p-3 text-right">RM{item.price?.toFixed(2)}</td>
                 <td className="p-3 text-center">
                   <button onClick={() => handleToggle(item.id)} className={`w-10 h-5 rounded-full transition ${item.available ? 'bg-green-500' : 'bg-gray-300'}`}>
                     <div className={`w-4 h-4 bg-white rounded-full transition transform ${item.available ? 'translate-x-5' : 'translate-x-0.5'}`} />

@@ -75,13 +75,13 @@ export default function OrderStatus() {
           {order.items?.map((item, idx) => (
             <div key={idx} className="flex justify-between text-sm">
               <span>{item.quantity}x {item.itemName}</span>
-              <span className="text-gray-500">${item.subtotal?.toFixed(2)}</span>
+              <span className="text-gray-500">RM{item.subtotal?.toFixed(2)}</span>
             </div>
           ))}
         </div>
         <div className="border-t mt-3 pt-3 flex justify-between font-bold">
           <span>Total</span>
-          <span className="text-primary">${order.totalAmount?.toFixed(2)}</span>
+          <span className="text-primary">RM{order.totalAmount?.toFixed(2)}</span>
         </div>
       </div>
 
