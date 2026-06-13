@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
-const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || 'demo'
-const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || 'restaurant_uploads'
+const CLOUD_NAME = 'dbkytxzm1'
+const UPLOAD_PRESET = 'k1now1um'
 
 export default function ImageUpload({ currentUrl, onUploaded }) {
   const [uploading, setUploading] = useState(false)
@@ -26,7 +26,7 @@ export default function ImageUpload({ currentUrl, onUploaded }) {
         setPreview(data.secure_url)
         onUploaded(data.secure_url)
       } else {
-        alert('Upload failed. Check Cloudinary settings.')
+        alert('Upload failed: ' + JSON.stringify(data.error || data))
       }
     } catch (err) {
       alert('Upload failed: ' + err.message)
