@@ -85,9 +85,65 @@ export default function OrderStatus() {
         </div>
       </div>
 
+      {/* Print Receipt button */}
+      {order.status !== 'CANCELLED' && (
+        <div className="text-center mt-6">
+          <button
+            onClick={() => printReceipt(order)}
+            className="bg-secondary text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-900 transition"
+          >
+            🖨️ Print Receipt
+          </button>
+        </div>
+      )}
+
       <p className="text-center text-xs text-gray-400 mt-6">
         This page auto-refreshes every 15 seconds
       </p>
     </div>
   )
+}
+
+function printReceipt(order) {
+  const receiptWindow = window.open('', '_blank', 'width=350,height=600')
+  receiptWindow.document.write(`
+    <html>
+    <head><title>Receipt - Order #${order.orderId}</title>
+    <style>
+      body { font-family: monospace; font-size: 12px; padding: 10px; max-width: 300px; margin: 0 auto; }
+      .center { text-align: center; }
+      .bold { font-weight: bold; }
+      .line { border-top: 1px dashed #000; margin: 8px 0; }
+      .item { display: flex; justify-content: space-between; margin: 4px 0; }
+      .total { font-size: 14px; font-weight: bold; }
+    </style>
+    </head>
+    <body>
+      <div class="center bold" style="font-size:16px;">FOOKWAY</div>
+      <div class="center">Order Receipt</div>
+      <div class="line"></div>
+      <div>Order #: ${order.orderId}</div>
+      <div>Table #: ${order.tableNumber}</div>
+      <div>Date: ${new Date(order.createdAt).toLocaleString()}</div>
+      <div class="line"></div>
+      ${order.items.map(item => `
+        <div class="item">
+          <span>${item.quantity}x ${item.itemName}</span>
+          <span>RM${item.subtotal?.toFixed(2)}</span>
+        </div>
+      `).join('')}
+      <div class="line"></div>
+      <div class="item total">
+        <span>TOTAL</span>
+        <span>RM${order.totalAmount?.toFixed(2)}</span>
+      </div>
+      <div class="line"></div>
+      ${order.customerNote ? `<div>Note: ${order.customerNote}</div><div class="line"></div>` : ''}
+      <div class="center" style="margin-top:10px;">Thank you for dining with us!</div>
+      <div class="center">--- Fookway ---</div>
+      <script>window.print();</script>
+    </body>
+    </html>
+  `)
+  receiptWindow.document.close()
 }
