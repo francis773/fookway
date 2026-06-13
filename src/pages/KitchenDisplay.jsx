@@ -1,14 +1,25 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { getKitchenOrders, updateKitchenStatus } from '../api/orderApi'
 import StatusBadge from '../components/StatusBadge'
 
 export default function KitchenDisplay() {
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
+  const printedOrdersRef = useRef(new Set())
 
   const fetchOrders = () => {
     getKitchenOrders()
-      .then((res) => setOrders(res.data))
+      .then((res) => {
+        const newOrders = res.data
+        // Auto-print new PENDING orders
+        newOrders.forEach(order => {
+          if (order.status === 'PENDING' && !printedOrdersRef.current.has(order.orderId)) {
+            printedOrdersRef.current.add(order.orderId)
+            autoPrintReceipt(order)
+          }
+        })
+        setOrders(newOrders)
+      })
       .catch(() => {})
       .finally(() => setLoading(false))
   }
@@ -111,4 +122,49 @@ export default function KitchenDisplay() {
       )}
     </div>
   )
+}
+
+function autoPrintReceipt(order) {
+  const receiptWindow = window.open('', '_blank', 'width=350,height=600')
+  if (!receiptWindow) return // popup blocked
+  receiptWindow.document.write(`
+    <html>
+    <head><title>Order #${order.orderId}</title>
+    <style>
+      body { font-family: monospace; font-size: 12px; padding: 10px; max-width: 300px; margin: 0 auto; }
+      .center { text-align: center; }
+      .bold { font-weight: bold; }
+      .line { border-top: 1px dashed #000; margin: 8px 0; }
+      .item { display: flex; justify-content: space-between; margin: 4px 0; }
+      .total { font-size: 14px; font-weight: bold; }
+    </style>
+    </head>
+    <body>
+      <div class="center bold" style="font-size:16px;">FOOKWAY</div>
+      <div class="center">Kitchen Order</div>
+      <div class="line"></div>
+      <div class="bold">Order #: ${order.orderId}</div>
+      <div class="bold">Table #: ${order.tableNumber}</div>
+      <div>Time: ${new Date(order.createdAt).toLocaleString()}</div>
+      <div class="line"></div>
+      ${order.items.map(item => `
+        <div class="item">
+          <span>${item.quantity}x ${item.itemName}</span>
+          <span>RM${item.subtotal?.toFixed(2)}</span>
+        </div>
+        ${item.specialInstructions ? `<div style="font-size:10px;color:#666;">  → ${item.specialInstructions}</div>` : ''}
+      `).join('')}
+      <div class="line"></div>
+      <div class="item total">
+        <span>TOTAL</span>
+        <span>RM${order.totalAmount?.toFixed(2)}</span>
+      </div>
+      ${order.customerNote ? `<div class="line"></div><div class="bold">Note: ${order.customerNote}</div>` : ''}
+      <div class="line"></div>
+      <div class="center">--- Fookway Kitchen ---</div>
+      <script>window.print(); setTimeout(() => window.close(), 1000);</script>
+    </body>
+    </html>
+  `)
+  receiptWindow.document.close()
 }
