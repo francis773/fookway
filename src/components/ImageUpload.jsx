@@ -15,7 +15,6 @@ export default function ImageUpload({ currentUrl, onUploaded }) {
     const formData = new FormData()
     formData.append('file', file)
     formData.append('upload_preset', UPLOAD_PRESET)
-    formData.append('folder', 'restaurant-menu')
 
     try {
       const res = await fetch(
