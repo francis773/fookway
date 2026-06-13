@@ -1,25 +1,14 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { getKitchenOrders, updateKitchenStatus } from '../api/orderApi'
 import StatusBadge from '../components/StatusBadge'
 
 export default function KitchenDisplay() {
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
-  const printedOrdersRef = useRef(new Set())
 
   const fetchOrders = () => {
     getKitchenOrders()
-      .then((res) => {
-        const newOrders = res.data
-        // Auto-print new PENDING orders
-        newOrders.forEach(order => {
-          if (order.status === 'PENDING' && !printedOrdersRef.current.has(order.orderId)) {
-            printedOrdersRef.current.add(order.orderId)
-            autoPrintReceipt(order)
-          }
-        })
-        setOrders(newOrders)
-      })
+      .then((res) => setOrders(res.data))
       .catch(() => {})
       .finally(() => setLoading(false))
   }
@@ -77,7 +66,16 @@ export default function KitchenDisplay() {
                   <span className="text-lg font-bold">Table #{order.tableNumber}</span>
                   <StatusBadge status={order.status} />
                 </div>
-                <span className="text-xs text-gray-500 font-mono">{timeElapsed(order.createdAt)}</span>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => printReceipt(order)}
+                    className="text-gray-400 hover:text-gray-700 text-sm"
+                    title="Print receipt"
+                  >
+                    🖨️
+                  </button>
+                  <span className="text-xs text-gray-500 font-mono">{timeElapsed(order.createdAt)}</span>
+                </div>
               </div>
 
               {/* Items */}
@@ -124,9 +122,9 @@ export default function KitchenDisplay() {
   )
 }
 
-function autoPrintReceipt(order) {
+function printReceipt(order) {
   const receiptWindow = window.open('', '_blank', 'width=350,height=600')
-  if (!receiptWindow) return // popup blocked
+  if (!receiptWindow) return
   receiptWindow.document.write(`
     <html>
     <head><title>Order #${order.orderId}</title>
@@ -161,7 +159,7 @@ function autoPrintReceipt(order) {
       </div>
       ${order.customerNote ? `<div class="line"></div><div class="bold">Note: ${order.customerNote}</div>` : ''}
       <div class="line"></div>
-      <div class="center">--- Fookway Kitchen ---</div>
+      <div class="center">--- Fookway ---</div>
       <script>window.print(); setTimeout(() => window.close(), 1000);</script>
     </body>
     </html>
