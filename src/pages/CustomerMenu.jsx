@@ -19,13 +19,15 @@ export default function CustomerMenu() {
   }, [searchParams, setTableToken])
 
   useEffect(() => {
-    getCategories().then((res) => setCategoriesList(res.data)).catch(() => {})
+    getCategories().then((res) => {
+      if (Array.isArray(res.data)) setCategoriesList(res.data)
+    }).catch(() => {})
   }, [])
 
   useEffect(() => {
     setLoading(true)
     getMenu(activeCategory)
-      .then((res) => setItems(res.data))
+      .then((res) => setItems(Array.isArray(res.data) ? res.data : []))
       .catch(() => setItems([]))
       .finally(() => setLoading(false))
   }, [activeCategory])
