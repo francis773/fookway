@@ -29,7 +29,8 @@ export default function KitchenDisplay() {
   }
 
   const timeElapsed = (dateStr) => {
-    const mins = Math.floor((Date.now() - new Date(dateStr).getTime()) / 60000)
+    const orderTime = new Date(dateStr + (dateStr.includes('Z') || dateStr.includes('+') ? '' : '+08:00'))
+    const mins = Math.floor((Date.now() - orderTime.getTime()) / 60000)
     if (mins < 1) return '< 1 min'
     if (mins < 60) return `${mins} min`
     return `${Math.floor(mins / 60)}h ${mins % 60}m`
@@ -143,7 +144,7 @@ function printReceipt(order) {
       <div class="line"></div>
       <div class="bold">Order #: ${order.orderId}</div>
       <div class="bold">Table #: ${order.tableNumber}</div>
-      <div>Time: ${new Date(order.createdAt).toLocaleString('en-SG', { timeZone: 'Asia/Singapore' })}</div>
+      <div>Time: ${new Date().toLocaleString('en-SG', { timeZone: 'Asia/Singapore', hour12: true })}</div>
       <div class="line"></div>
       ${order.items.map(item => `
         <div class="item">

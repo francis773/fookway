@@ -2,7 +2,8 @@ import StatusBadge from './StatusBadge'
 
 export default function OrderCard({ order, actions }) {
   const timeAgo = (dateStr) => {
-    const diff = Date.now() - new Date(dateStr).getTime()
+    const orderTime = new Date(dateStr + (dateStr.includes('Z') || dateStr.includes('+') ? '' : '+08:00'))
+    const diff = Date.now() - orderTime.getTime()
     const mins = Math.floor(diff / 60000)
     if (mins < 1) return 'just now'
     if (mins < 60) return `${mins}m ago`
