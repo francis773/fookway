@@ -139,11 +139,11 @@ function printReceipt(order) {
     </head>
     <body>
       <div class="center bold" style="font-size:16px;">FOOKWAY</div>
-      <div class="center">Kitchen Order</div>
+      <div class="center">Order Receipt</div>
       <div class="line"></div>
       <div class="bold">Order #: ${order.orderId}</div>
       <div class="bold">Table #: ${order.tableNumber}</div>
-      <div>Time: ${new Date(order.createdAt).toLocaleString()}</div>
+      <div>Time: ${new Date(order.createdAt).toLocaleString('en-SG', { timeZone: 'Asia/Singapore' })}</div>
       <div class="line"></div>
       ${order.items.map(item => `
         <div class="item">
